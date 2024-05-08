@@ -19,6 +19,7 @@ let bolinha = {
     py: 345,
     tx: 30,
     ty: 30,
+    dir: 8,
 }
 
 
@@ -30,8 +31,29 @@ function draw() {
     quadro.fillRect(player1.px, player1.py, player1.tx, player1.ty)
     quadro.fillRect(player2.px, player2.py, player2.tx, player2.ty)
     quadro.fillRect(bolinha.px, bolinha.py, bolinha.tx, bolinha.ty)
-    quadro.fillText(`Pontos: ${pts1}`, 200, 70)
-    quadro.fillText(`Pontos: ${pts2}`, 1000, 70)
+    quadro.fillText(`Pontos: ${pts1}`, 280, 70)
+    quadro.fillText(`Pontos: ${pts2}`, 900, 70)
 }
 
-draw()
+document.addEventListener("keydown", function(e){
+    player1.py -= 10
+})
+
+function moverBolinha() {
+    bolinha.px += bolinha.dir
+    if (bolinha.px > player2.px) {
+        bolinha.dir *= -1
+    }
+    else if (bolinha.px < 90) {
+        bolinha.dir *= -1
+    }
+}
+
+function main() {
+    quadro.clearRect(0, 0, 1280, 720) // wow limpa as coisas
+
+    draw()
+    moverBolinha()
+}
+
+setInterval(main, 10) 
