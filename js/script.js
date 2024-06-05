@@ -7,12 +7,14 @@ let player1 = {
     py: 260,
     tx: 30,
     ty: 200,
+    dir : 0
 }
 let player2 = {
     px: 1150,
     py: 260,
     tx: 30,
     ty: 200,
+    dir: 0
 }
 let bolinha = {
     px: 625,
@@ -21,7 +23,6 @@ let bolinha = {
     ty: 30,
     dir: 8,
 }
-
 
 quadro.font = "20px Comic Sans MS"
 let pts1 = 0
@@ -35,16 +36,81 @@ function draw() {
     quadro.fillText(`Pontos: ${pts2}`, 900, 70)
 }
 
-document.addEventListener("keydown", function(e){
-    player1.py -= 10
+document.addEventListener("keydown", function(keyPressed){
+    if(keyPressed.keyCode == 87) {
+        player1.dir -= 8
+    }
+    else if(keyPressed.keyCode == 83){
+        player1.dir += 8
+    }
 })
+
+document.addEventListener("keyup", function(keyPressed) {
+    if(keyPressed.keyCode == 87) {
+        player1.dir = 0
+    }
+    else if(keyPressed.keyCode == 83){
+        player1.dir = 0
+    }
+})
+
+document.addEventListener("keydown", function(keyPressed){
+    if(keyPressed.keyCode == 38) {
+        player2.dir -= 8
+    }
+    else if(keyPressed.keyCode == 40){
+        player2.dir += 8
+    }
+})
+
+document.addEventListener("keyup", function(keyPressed){
+    if(keyPressed.keyCode == 38) {
+        player2.dir = 0
+    }
+    else if(keyPressed.keyCode == 40){
+        player2.dir = 0
+    }
+})
+
+function moverJogador() {
+    if (player1.py < 0) {
+        player1.py = 0
+    }
+    if (player1.py > 520) {
+        player1.py = 520
+    }
+    if (player2.py < 0) {
+        player2.py = 0
+    }
+    if (player2.py > 520) {
+        player2.py = 520
+    }
+    player1.py += player1.dir
+    player2.py += player2.dir
+}
 
 function moverBolinha() {
     bolinha.px += bolinha.dir
-    if (bolinha.px > player2.px) {
+}
+
+function colisao() {
+    if (bolinha.py + bolinha.ty >= player2.py && bolinha.py <= player2.py + player2.ty && bolinha.px >= player2.px - player2.tx) {
         bolinha.dir *= -1
     }
-    else if (bolinha.px < 90) {
+    else if (bolinha.py + bolinha.ty >= player1.py && bolinha.py <= player1.py + player1.ty && bolinha.px <= player1.px + player1.tx) {
+        bolinha.dir *= -1
+    }
+}
+
+function placar() {
+    if(bolinha.px < -100) {
+        pts1 += 1
+        bolinha.px = 625
+        bolinha.dir *= -1 
+    }
+    else if (bolinha.px > 1380) {
+        pts2 += 1
+        bolinha.px = 625
         bolinha.dir *= -1
     }
 }
@@ -54,6 +120,9 @@ function main() {
 
     draw()
     moverBolinha()
+    placar()
+    colisao()
+    moverJogador()
 }
 
 setInterval(main, 10) 
