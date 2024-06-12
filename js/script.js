@@ -1,5 +1,6 @@
 let canvasPong = document.getElementById("canvas")        
 let quadro = canvasPong.getContext("2d")
+let bruh = new Audio('./bruh.mp3')
 
 quadro.fillStyle = "white" // permite preencher a cor dos objetos dentro do quadro
 let player1 = {
@@ -22,11 +23,13 @@ let bolinha = {
     tx: 30,
     ty: 30,
     dir: 8,
+    dirY: 2
 }
 
 quadro.font = "20px Comic Sans MS"
 let pts1 = 0
 let pts2 = 0
+let jogar = true
 
 function draw() {
     quadro.fillRect(player1.px, player1.py, player1.tx, player1.ty)
@@ -34,6 +37,13 @@ function draw() {
     quadro.fillRect(bolinha.px, bolinha.py, bolinha.tx, bolinha.ty)
     quadro.fillText(`Pontos: ${pts1}`, 280, 70)
     quadro.fillText(`Pontos: ${pts2}`, 900, 70)
+}
+
+function telaVencedor() {
+    quadro.clearRect(0, 0, 1280, 720) // wow limpa as coisas
+    quadro.font = "60px Comic Sans MS"
+    quadro.fillText(`Pontos: ${pts1}`, 200, 345)
+    quadro.fillText(`Pontos: ${pts2}`, 800, 345)
 }
 
 document.addEventListener("keydown", function(keyPressed){
@@ -91,46 +101,60 @@ function moverJogador() {
 
 function moverBolinha() {
     bolinha.px += bolinha.dir
+    bolinha.py += bolinha.dirY
+
+    if(bolinha.py < 0) {
+        bolinha.dirY *= -1
+    }
+    else if (bolinha.py > 690) {
+        bolinha.dirY *= -1
+    }
 }
 
 function colisao() {
-    if (bolinha.py + bolinha.ty >= player2.py && bolinha.py <= player2.py + player2.ty && bolinha.px >= player2.px - player2.tx) {
+    if (bolinha.py + bolinha.ty >= player2.py && bolinha.py <= player2.py + player2.ty && bolinha.px >= player2.px - player2.tx && bolinha.px >= player2.px - player2.tx) {
         bolinha.dir *= -1
+
     }
-    else if (bolinha.py + bolinha.ty >= player1.py && bolinha.py <= player1.py + player1.ty && bolinha.px <= player1.px + player1.tx) {
+    else if (bolinha.py + bolinha.ty >= player1.py && bolinha.py <= player1.py + player1.ty && bolinha.px <= player1.px + player1.tx && bolinha.px >= player1.px-player1.tx) {
         bolinha.dir *= -1
     }
 }
 
 function placar() {
     if(bolinha.px < -100) {
-        pts1 += 1
-        bolinha.px = 625
-        bolinha.dir *= -1 
-    }
-    else if (bolinha.px > 1380) {
         pts2 += 1
         bolinha.px = 625
+        bolinha.dir *= -1 
+        bruh.play()
+    }
+    else if (bolinha.px > 1380) {
+        pts1 += 1
+        bolinha.px = 625
         bolinha.dir *= -1
+        bruh.play()
     }
 }
 
-function placar() {
-    if(bolinha.px < 90) {
-        pts1 += 1 
-    }
-    else if (bolinha.px > 1150) {
-        pts2 += 1
+function fimJogo() {
+    if(pts1 > 4 || pts2 > 4 ) {
+        jogar = false
     }
 }
 
 function main() {
-    quadro.clearRect(0, 0, 1280, 720) // wow limpa as coisas
-
-    draw()
-    moverBolinha()
-    placar()
-    moverJogador()
+    if(jogar == true) {
+        quadro.clearRect(0, 0, 1280, 720) // wow limpa as coisas
+        draw()
+        moverBolinha()
+        colisao()
+        placar()
+        moverJogador()
+        fimJogo()
+    }
+    else {
+        telaVencedor()
+    }
 }
 
 setInterval(main, 10) 
