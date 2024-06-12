@@ -1,6 +1,8 @@
 let canvasPong = document.getElementById("canvas")        
 let quadro = canvasPong.getContext("2d")
 let bruh = new Audio('./bruh.mp3')
+let foda = new Audio('./chickenbeatbox.mp3')
+let foda2 = new Audio('./sif.mp3')
 
 quadro.fillStyle = "white" // permite preencher a cor dos objetos dentro do quadro
 let player1 = {
@@ -44,6 +46,12 @@ function telaVencedor() {
     quadro.font = "60px Comic Sans MS"
     quadro.fillText(`Pontos: ${pts1}`, 200, 345)
     quadro.fillText(`Pontos: ${pts2}`, 800, 345)
+    if (pts1 > pts2) {
+        foda.play()
+    }
+    else {
+        foda2.play()
+    }
 }
 
 document.addEventListener("keydown", function(keyPressed){
