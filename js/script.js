@@ -115,13 +115,21 @@ function placar() {
     }
 }
 
+function placar() {
+    if(bolinha.px < 90) {
+        pts1 += 1 
+    }
+    else if (bolinha.px > 1150) {
+        pts2 += 1
+    }
+}
+
 function main() {
     quadro.clearRect(0, 0, 1280, 720) // wow limpa as coisas
 
     draw()
     moverBolinha()
     placar()
-    colisao()
     moverJogador()
 }
 
